@@ -1,0 +1,43 @@
+.required-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin: 0;
+  padding: 16px 32px;
+  justify-content: space-between;
+}
+
+.clipboard-icon {
+  font-size: 24px;
+  color: #333333;
+}
+
+.required-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.required-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333333;
+  font-family: "Samsung InterFace", "Segoe UI", Arial, sans-serif;
+}
+
+.lbo-left { display: inline-flex; align-items: center; gap: 8px; }
+.lbo-info-icon { width: 18px; height: 18px; display: block; }
+
+.fy-container { display: inline-flex; align-items: center; gap: 12px; }
+.fy-label { font-size: 18px; color: #1f1f1f; font-weight: 600; }
+.fy-radio { display: inline-flex; align-items: center; gap: 6px; }
+.fy-radio span { font-size: 14px; color: #1f1f1f; font-weight: 600; }
+.fy-radio input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px; height: 14px; border: 2px solid #0ea5e9; border-radius: 50%; background: #fff; position: relative; cursor: pointer;
+}
+.fy-radio input[type="radio"]:checked::after {
+  content: ""; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: #0ea5e9; border-radius: 50%; transform: translate(-50%,-50%);
+}

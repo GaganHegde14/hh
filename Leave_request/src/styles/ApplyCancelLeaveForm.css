@@ -1,0 +1,599 @@
+.acl-panel {
+  background: #f7f8fa;
+  /* border: 1px solid rgba(0,0,0,0.08); */
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 16px 0 24px;
+  position: relative; /* allow absolute-positioned note popover */
+  font-family: "Samsung InterFace", sans-serif;
+}
+
+.acl-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.acl-title-row h3 {
+  margin: 0;
+  font-size: 16px;
+  font-w.acl-select-custom select {
+    height: 40px; /* Reduce height to match other input fields */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: #ffffff; /* Keep white background */
+    padding-right: 40px; /* Make room for custom dropdown arrow */
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    padding-left: 12px;
+    font-family: "Samsung InterFace", sans-serif;
+  }
+  color: #28303f;
+}
+
+.acl-title-icon {
+  width: 20px;
+  height: 24px;
+  display: block;
+}
+
+.acl-form {
+  margin-top: 16px;
+  gap: 24px;
+}
+
+.acl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px 36px; /* more spacing between blocks */
+}
+
+.acl-acknowledgment {
+  margin: 20px 0;
+  padding: 8px 0;
+}
+
+.acl-ack-label {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: "Samsung InterFace", sans-serif;
+  font-size: 14px;
+  line-height: 145%;
+  cursor: pointer;
+}
+
+.acl-ack-icon {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.acl-ack-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.acl-ack-custom-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.acl-ack-checkbox:checked + .acl-ack-custom-checkbox {
+  background: #2f80ed;
+  border-color: #2f80ed;
+}
+
+.acl-ack-checkbox:checked + .acl-ack-custom-checkbox::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 3px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.acl-ack-text {
+  font-size: 14px;
+  color: #000000;
+}
+.acl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.acl-row-two {
+  grid-column: 1 / 3; /* sits under leave type/sub categories */
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* from / to side-by-side */
+  gap: 24px 36px;
+}
+
+.acl-row-three {
+  grid-column: 1 / 4; /* spans all three columns */
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* leave type, from date, to date equally spaced */
+  grid-template-rows: auto auto; /* two rows - fields and button */
+  gap: 10px 36px;
+  padding-right: 0px; /* Add right padding to prevent touching the edge */
+}
+
+.acl-field label {
+  font-size: 13px;
+  color: #101928;
+  font-weight: 700; /* headings bold as per target */
+}
+
+.acl-input-icon {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  isolation: isolate;
+  z-index: 1;
+}
+
+.acl-input-icon:focus-within {
+  z-index: 2;
+}
+
+.acl-date-display {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  font-family: "Samsung InterFace", sans-serif;
+  font-size: 14px;
+  color: #101928;
+  pointer-events: none;
+}
+
+/* Hide the default date input display but keep it functional */
+.acl-input-icon input[type="date"] {
+  color: transparent;
+  background: #ffffff;
+  border: 0.5px solid #d0d5dd;
+  border-radius: 6px;
+  height: 40px;
+  width: 100%;
+  padding: 0 27px 0 0px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Ensure calendar popup appears below */
+.acl-input-icon input[type="date"]::-webkit-calendar-picker {
+  margin-top: 2px !important;
+  transform: translateY(100%) !important;
+}
+
+/* Additional support for different browsers */
+.acl-input-icon input[type="date"]::-webkit-inner-spin-button,
+.acl-input-icon input[type="date"]::-webkit-outer-spin-button {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+/* Style for the calendar popup */
+.acl-input-icon input[type="date"]::-webkit-datetime-edit {
+  visibility: hidden;
+}
+
+.acl-input-icon input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* Custom calendar popup positioning */
+.acl-input-icon input[type="date"]::-webkit-calendar-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+}
+
+/* Ensure the calendar appears below */
+::-webkit-calendar-picker-wrapper {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  margin-top: 4px !important;
+}
+
+/* Additional popup styles */
+::-webkit-datetime-edit-fields-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+/* Calendar popup container */
+::-webkit-calendar-picker {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  margin-top: 4px !important;
+  z-index: 1000;
+}
+
+.acl-radio-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.acl-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Samsung InterFace", sans-serif;
+}
+/* Custom radio to force white background across browsers */
+.acl-radio.secondary input[type="radio"] {
+  -webkit-appearance: none;
+  border: 2px solid #a9a8aa !important;
+}
+
+.acl-radio.secondary input[type="radio"]:checked {
+  border-color: #38aee0 !important;
+}
+
+.acl-radio input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #0ea5e9;
+  border-radius: 50%;
+  background: #ffffff; /* white background */
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.acl-radio input[type="radio"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: #0ea5e9;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.acl-note-toggle {
+  grid-column: 3 / 4;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 4px;
+  position: relative;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  outline: none;
+}
+.acl-note-toggle:focus {
+  outline: none;
+  box-shadow: none;
+}
+.acl-note-toggle img {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+.acl-note {
+  position: absolute;
+  top: -23px;
+  right: -6px;
+  z-index: 100;
+  margin-top: 5px;
+  width: 680px;
+}
+.acl-note-beak {
+  position: absolute;
+  top: -5px;
+  right: 25px;
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+  border-top: 1px solid #e5e7eb;
+  z-index: 11;
+}
+
+.acl-note-inner {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #52525b;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  position: relative;
+  margin-left: auto;
+}
+.acl-note-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.acl-note-close {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.acl-note-close img {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.acl-select select,
+.acl-input-icon input,
+textarea {
+  width: 98%;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #28303f;
+  background: #fff;
+  font-family: "Samsung InterFace", sans-serif;
+}
+
+/* Placeholder text styling for all browsers */
+.acl-input-icon input::placeholder,
+textarea::placeholder {
+  font-family: "Samsung InterFace", sans-serif;
+  color: #9ca3af;
+}
+
+.acl-input-icon input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  font-family: "Samsung InterFace", sans-serif;
+  color: #9ca3af;
+}
+
+.acl-input-icon input::-moz-placeholder,
+textarea::-moz-placeholder {
+  font-family: "Samsung InterFace", sans-serif;
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.acl-input-icon input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  font-family: "Samsung InterFace", sans-serif;
+  color: #9ca3af;
+}
+
+/* Only the two date inputs should be 93% width */
+.acl-input-icon input[type="date"] {
+  width: 93%;
+}
+
+.acl-input-icon {
+  position: relative;
+}
+.acl-cal-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: transparent; /* Remove background */
+  cursor: pointer;
+  border: none; /* Remove any border */
+}
+.acl-cal-btn img {
+  width: 24px; /* Increase icon size */
+  height: 24px; /* Increase icon size */
+  display: block;
+}
+.acl-cal-btn:hover {
+  background: transparent; /* Keep background transparent on hover */
+}
+
+.acl-add-list {
+  grid-column: 3 / 4; /* place beside To Date */
+  align-self: end; /* align vertically with input */
+  display: flex;
+  align-items: center;
+}
+
+.acl-add-list-right {
+  grid-column: 3 / 4; /* align with To Date field (3rd column) */
+  grid-row: 2; /* place in second row */
+  justify-self: end; /* align to the right end of To Date field */
+  display: flex;
+  align-items: center;
+  margin-top: 12px; /* Add some spacing from the input fields */
+}
+
+.acl-add-list-img {
+  width: 157px;
+  height: 40px;
+  cursor: pointer;
+}
+
+/* Custom select styling for consistent height */
+.acl-select-custom {
+  position: relative;
+}
+
+.acl-select-custom select {
+  height: 42px; /* Reduce height to match other input fields */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #ffffff; /* Keep white background */
+  padding-right: 40px; /* Make room for custom dropdown arrow */
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding-left: 12px;
+}
+
+.acl-dropdown-icon {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 12px;
+  height: 8px;
+}
+
+/* Readonly date input styling */
+.acl-readonly-input {
+  background-color: #d0d5dd !important;
+  cursor: not-allowed;
+}
+
+.acl-readonly .acl-date-display {
+  background-color: #d0d5dd;
+  cursor: not-allowed;
+}
+
+.acl-cal-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Hide scrollbars for textarea fields */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.acl-check {
+  grid-column: 1 / 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+/* Custom checkbox to force white background across browsers */
+.acl-check input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #0ea5e9;
+  border-radius: 3px;
+  background: #ffffff; /* white background */
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.acl-check input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 6px;
+  height: 10px;
+  border: solid #0ea5e9;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.acl-check label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #28303f;
+}
+
+.acl-col-span {
+  grid-column: 1 / 4;
+}
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.acl-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.acl-actions {
+  display: flex;
+  gap: 10px;
+}
+.acl-btn {
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: "Samsung InterFace", sans-serif;
+}
+.acl-btn.ghost {
+  background: #ffffff;
+  color: #202224;
+  border: 1px solid #0ea5e9;
+}
+.acl-btn.primary {
+  background: #0ea5e9;
+  color: #ffffff;
+  border: none;
+}
+
+@media (max-width: 1024px) {
+  .acl-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .acl-col-span {
+    grid-column: 1 / 3;
+  }
+  .acl-note {
+    grid-column: 2 / 3;
+  }
+}
+@media (max-width: 640px) {
+  .acl-grid {
+    grid-template-columns: 1fr;
+  }
+  .acl-col-span,
+  .acl-note,
+  .acl-check {
+    grid-column: 1 / 2;
+  }
+}

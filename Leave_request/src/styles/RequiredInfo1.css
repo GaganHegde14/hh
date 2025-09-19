@@ -1,0 +1,102 @@
+.required-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  margin: 0;
+  padding: 1px 16px;
+}
+
+.cancel-leave-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clipboard-icon {
+  font-size: 24px;
+  color: #333333;
+}
+
+.required-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333333;
+  font-family: "Samsung InterFace", "Segoe UI", Arial, sans-serif;
+}
+
+.grey-icon-header {
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.financial-year-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 1px 10px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  min-height: 44px;
+}
+
+.financial-year-label {
+  font-weight: 500;
+  color: #333;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.year-options {
+  display: flex;
+  gap: 20px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.radio-option input[type="radio"] {
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  border: 2px solid #dee2e6;
+  border-radius: 50%;
+  background: white;
+  position: relative;
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"]:checked {
+  border-color: #38aee0;
+  background: white;
+}
+
+.radio-option input[type="radio"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #38aee0;
+}
+
+.radio-text {
+  color: #333;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.radio-option input[type="radio"]:checked + .radio-text {
+  font-weight: 700;
+  color: #333;
+}
