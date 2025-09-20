@@ -382,7 +382,7 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
             </div>
           )}
 
-          {!hideSubCategories && !isCompassionate && !isRestricted && (
+          {!hideSubCategories && !isCompassionate && !isRestricted && form.leaveType !== "comp-off" && (
             <div className="acl-field">
               <label>Sub Categories</label>
               <div className="acl-select">
