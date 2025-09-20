@@ -69,17 +69,21 @@ const ContentText = styled.div`
   }
 
   li:last-child {
-    color: #0066CC;
+    color: #38AEE0;
     cursor: pointer;
+    text-decoration: underline;
     
-    &:hover {
-      text-decoration: underline;
+    &:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #38AEE0;
     }
   }
   
   a {
     color: inherit;
-    text-decoration: none;
+    text-decoration: inherit;
     cursor: pointer;
   }
 `;
@@ -121,7 +125,7 @@ const PopCompOff = ({ visible = true, onClose, onFaqClick }) => {
       <ContentText>
         <ul>
           <li>Can be availed for working on a non-working day (Sat, Sun & any Company declared General Holiday).</li>
-          <li><a onClick={onFaqClick}>Click here</a> to refer to the FAQ on Comp off process</li>
+          <li><a onClick={onFaqClick}>Click here to refer to the FAQ on Comp off process</a></li>
         </ul>
       </ContentText>
       <CloseIcon onClick={onClose} />

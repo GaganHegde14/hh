@@ -9,7 +9,8 @@ import applyCancelIcon from "../assets/svg/applyCancel.svg";
 import dropdownIcon from "../assets/svg/dropdown.svg";
 import PopCompassionate from "./PopCompassionate";
 import PopCompOff from "./PopCompOff";
-
+import AcknowledgmentFrame from "./AcknowledgmentFrame";
+import FieldWithLabel from "./FieldWithLabel";
 import { useNavigate } from "react-router-dom";
 
 const formatDate = (dateStr) => {
@@ -21,26 +22,7 @@ const formatDate = (dateStr) => {
   return `${day}-${month}-${year}`;
 };
 
-const AcknowledgmentSection = ({ isChecked, onChange }) => {
-  return (
-    <div className="acl-acknowledgment">
-      <label className="acl-ack-label">
-        <div className="acl-ack-icon">
-          <input
-            type="checkbox"
-            checked={isChecked}
-            onChange={(e) => onChange(e.target.checked)}
-            className="acl-ack-checkbox"
-          />
-          <span className="acl-ack-custom-checkbox"></span>
-        </div>
-        <span className="acl-ack-text">
-          I acknowledge that this OOO request is for official purpose only.
-        </span>
-      </label>
-    </div>
-  );
-};
+// Using our new AcknowledgmentFrame component instead
 
 const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
   const [form, setForm] = useState({
@@ -170,7 +152,8 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
             {showNote && (
               <>
                 {(form.leaveType === "compassionate-bereavement" ||
-                  form.leaveType === "long-service-leave") && (
+                  form.leaveType === "long-service-leave" ||
+                  form.leaveType === "restricted-flexi-holiday") && (
                   <PopCompassionate onClose={() => setShowNote(false)} />
                 )}
                 {form.leaveType === "comp-off" && (
@@ -180,10 +163,17 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                   "compassionate-bereavement",
                   "comp-off",
                   "long-service-leave",
+                  "restricted-flexi-holiday"
                 ].includes(form.leaveType) && (
-                  <div className="acl-note">
+                  <div className="acl-note" style={{ 
+                    width: form.leaveType === "out-of-office" ? "550px" : "680px" 
+                  }}>
                     <div className="acl-note-beak"></div>
-                    <div className="acl-note-inner">
+                    <div className={`acl-note-inner ${form.leaveType === "out-of-office" ? "hide-scrollbar" : ""}`} style={{
+                      padding: form.leaveType === "out-of-office" ? "10px 16px" : "14px 16px",
+                      maxHeight: form.leaveType === "out-of-office" ? "90px" : "auto",
+                      overflow: form.leaveType === "out-of-office" ? "auto" : "visible"
+                    }}>
                       <div className="acl-note-header">
                         <strong>Note:</strong>
                         <button
@@ -195,7 +185,9 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                           <img src={noteCloseIcon} alt="Close" />
                         </button>
                       </div>
-                      <p>
+                      <p style={{
+                        margin: form.leaveType === "out-of-office" ? "5px 0" : "auto"
+                      }}>
                         • For any official work / Team Bonding activity /
                         Conference / Training / Annual Health Check-up / All
                         hands Meet / Meetings / Court Visits / Field Testing /
@@ -208,153 +200,202 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
             )}
           </div>
 
-          {/* Special layout for long-service leave AND comp-off: Leave Type, From Date, To Date in one row */}
+          {/* Special layout for restricted-flexi, comp-off, and long-service */}
           {form.leaveType === "long-service-leave" ||
-          form.leaveType === "comp-off" ? (
+          form.leaveType === "comp-off" ||
+          form.leaveType === "restricted-flexi-holiday" ? (
             <div className="acl-row-three">
-              <div className="acl-field">
-                <label>Leave Type</label>
-                <div className="acl-select acl-select-custom">
-                  <select
-                    value={form.leaveType}
-                    onChange={(e) => {
-                      const v = e.target.value;
-                      update("leaveType", v);
-                      // Set reason based on leave type
-                      if (v === "comp-off") {
-                        update(
-                          "reason",
-                          "I have an important personal matter to attend at my Home town."
-                        );
-                      } else {
-                        update(
-                          "reason",
-                          "Work on Weekend for Project deployment"
-                        );
-                      }
-                      // navigate to dedicated routes for specific types
-                      if (v === "long-service-leave")
-                        navigate("/leave/long-service");
-                      else if (v === "compassionate-bereavement")
-                        navigate("/leave/compassionate");
-                      else if (v === "restricted-flexi-holiday")
-                        navigate("/leave/restricted-flexi");
-                      else if (v === "comp-off") navigate("/leave/comp-off");
-                    }}
-                  >
-                    <option value="out-of-office">Out of Office</option>
-                    <option value="long-service-leave">
-                      Long Service Leave
-                    </option>
-                    <option value="compassionate-bereavement">
-                      Compassionate / Bereavement Leave
-                    </option>
-                    <option value="restricted-flexi-holiday">
-                      Restricted Holiday / Flexi Holiday
-                    </option>
-                    <option value="comp-off">Comp off</option>
-                  </select>
-                  <img
-                    src={dropdownIcon}
-                    alt="Dropdown"
-                    className="acl-dropdown-icon"
-                  />
-                </div>
-              </div>
-
-              <div className="acl-field">
-                <label>From Date</label>
-                <div className="acl-input-icon">
-                  <input
-                    ref={fromRef}
-                    type="date"
-                    value={form.fromDate}
-                    onChange={(e) => update("fromDate", e.target.value)}
-                  />
-                  <div className="acl-date-display">
-                    {formatDate(form.fromDate)}
+              {/* Use FieldWithLabel component for Long Service Leave route */}
+              {form.leaveType === "long-service-leave" ? (
+                <FieldWithLabel 
+                  label="Leave Type"
+                  value="Long Service Leave"
+                  onClick={() => {
+                    // Keep the same functionality as the dropdown
+                    navigate("/");
+                  }}
+                />
+              ) : (
+                <div className="acl-field">
+                  <label>Leave Type</label>
+                  <div className="acl-select">
+                    <select
+                      style={{
+                        fontFamily: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "Samsung InterFace" : "inherit",
+                        fontSize: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "14px" : "inherit",
+                        color: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" ? "#333333" :
+                               form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "#202224" : "inherit"
+                      }}
+                      value={form.leaveType}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        update("leaveType", v);
+                        // Set reason based on leave type
+                        if (v === "comp-off") {
+                          update(
+                            "reason",
+                            "I have an important personal matter to attend at my Home town."
+                          );
+                        } else {
+                          update(
+                            "reason",
+                            "Work on Weekend for Project deployment"
+                          );
+                        }
+                        // navigate to dedicated routes for specific types
+                        if (v === "long-service-leave")
+                          navigate("/leave/long-service");
+                        else if (v === "compassionate-bereavement")
+                          navigate("/leave/compassionate");
+                        else if (v === "restricted-flexi-holiday")
+                          navigate("/leave/restricted-flexi");
+                        else if (v === "comp-off") navigate("/leave/comp-off");
+                      }}
+                    >
+                      <option value="out-of-office">Out of Office</option>
+                      <option value="long-service-leave">
+                        Long Service Leave
+                      </option>
+                      <option value="compassionate-bereavement">
+                        Compassionate / Bereavement Leave
+                      </option>
+                      <option value="restricted-flexi-holiday">
+                        Restricted Holiday / Flexi Holiday
+                      </option>
+                      <option value="comp-off">Comp off</option>
+                    </select>
                   </div>
-                  <button
-                    type="button"
-                    className="acl-cal-btn"
-                    aria-label="Open from date picker"
-                    onClick={() => openPicker(fromRef)}
-                  >
-                    <img src={datePickerIcon} alt="" />
-                  </button>
                 </div>
-              </div>
+              )}
+              
+              {/* Show Flexi Holiday List for restricted-flexi */}
+              {form.leaveType === "restricted-flexi-holiday" ? (
+                <div className="acl-field">
+                  <label>Flexi Holiday List</label>
+                  <div className="acl-select">
+                    <select
+                      value={form.flexiHoliday || ""}
+                      onChange={(e) => update("flexiHoliday", e.target.value)}
+                    >
+                      <option value="" disabled>
+                        Select flexy holiday
+                      </option>
+                      <option value="new-year">New Year</option>
+                      <option value="regional-festival">Regional Festival</option>
+                      <option value="religious-observance">Religious Observance</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+              ) : (
+                <div className="acl-field">
+                  <label>From Date</label>
+                  <div className="acl-input-icon">
+                    <input
+                      ref={fromRef}
+                      type="date"
+                      value={form.fromDate}
+                      onChange={(e) => update("fromDate", e.target.value)}
+                    />
+                    <div className="acl-date-display" style={{
+                      fontFamily: form.leaveType === "long-service-leave" || form.leaveType === "comp-off" ? "Samsung InterFace" : "inherit",
+                      fontSize: form.leaveType === "long-service-leave" || form.leaveType === "comp-off" ? "14px" : "inherit",
+                      color: form.leaveType === "long-service-leave" || form.leaveType === "comp-off" ? "#101928" : "inherit"
+                    }}>
+                      {form.leaveType === "comp-off" ? 
+                        `${formatDate(form.fromDate)} | (Work Duration 11:10 hrs)` : 
+                        formatDate(form.fromDate)
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      className="acl-cal-btn"
+                      aria-label="Open from date picker"
+                      onClick={() => openPicker(fromRef)}
+                    >
+                      <img src={datePickerIcon} alt="" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div className="acl-field">
                 <label>To Date</label>
                 <div
-                  className={
-                    form.leaveType === "long-service-leave"
-                      ? "acl-input-icon acl-readonly"
-                      : "acl-input-icon"
-                  }
+                  className="acl-input-icon"
                 >
                   <input
                     ref={toRef}
                     type="date"
                     value={
-                      form.leaveType === "comp-off" ? form.toDate : "2025-09-19"
+                      form.leaveType === "comp-off" ? form.toDate : "2025-08-08"
                     }
                     onChange={(e) => {
                       if (form.leaveType === "comp-off") {
                         update("toDate", e.target.value);
                       }
                     }}
-                    readOnly={form.leaveType === "long-service-leave"}
-                    className={
-                      form.leaveType === "long-service-leave"
-                        ? "acl-readonly-input"
-                        : ""
-                    }
+                    readOnly={false}
+                    style={{
+                      backgroundColor: form.leaveType === "long-service-leave" || form.leaveType === "restricted-flexi-holiday" ? "#E5E5E5" : "inherit"
+                    }}
                   />
-                  <div className="acl-date-display">
+                  <div className="acl-date-display" style={{
+                    fontFamily: form.leaveType === "long-service-leave" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "Samsung InterFace" : "inherit",
+                    fontSize: form.leaveType === "long-service-leave" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "14px" : "inherit",
+                    color: form.leaveType === "long-service-leave" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "#101928" : "inherit"
+                  }}>
                     {form.leaveType === "comp-off"
                       ? formatDate(form.toDate)
-                      : "19-Sep-2025"}
+                      : "08-Aug-2025"}
                   </div>
                   <button
                     type="button"
-                    className={
-                      form.leaveType === "long-service-leave"
-                        ? "acl-cal-btn acl-cal-btn-disabled"
-                        : "acl-cal-btn"
-                    }
-                    aria-label={
-                      form.leaveType === "long-service-leave"
-                        ? "Date picker disabled"
-                        : "Open to date picker"
-                    }
-                    disabled={form.leaveType === "long-service-leave"}
-                    onClick={() => {
-                      if (form.leaveType === "comp-off") {
-                        openPicker(toRef);
-                      }
-                    }}
+                    className="acl-cal-btn"
+                    aria-label="Open to date picker"
+                    disabled={false}
+                    onClick={() => openPicker(toRef)}
                   >
                     <img src={datePickerIcon} alt="" />
                   </button>
                 </div>
               </div>
 
-              <div className="acl-add-list acl-add-list-right">
-                <img
-                  src={addLLIcon}
-                  alt="Add to Leave list"
-                  className="acl-add-list-img"
-                  onClick={() => {}}
-                />
-              </div>
+              {/* Show Add List button below To Date for restricted-flexi */}
+              {form.leaveType === "restricted-flexi-holiday" && (
+                <div className="acl-add-list-below" style={{ gridColumn: "3/4", marginTop: "10px" }}>
+                  <img
+                    src={addLLIcon}
+                    alt="Add to Leave list"
+                    className="acl-add-list-img"
+                    onClick={() => {}}
+                  />
+                </div>
+              )}
+              
+              {/* Show Add List button in its normal position for other layouts */}
+              {form.leaveType !== "restricted-flexi-holiday" && (
+                <div className="acl-add-list acl-add-list-right">
+                  <img
+                    src={addLLIcon}
+                    alt="Add to Leave list"
+                    className="acl-add-list-img"
+                    onClick={() => {}}
+                  />
+                </div>
+              )}
             </div>
           ) : (
             <div className="acl-field">
               <label>Leave Type</label>
               <div className="acl-select">
                 <select
+                  style={{
+                    fontFamily: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "Samsung InterFace" : "inherit",
+                    fontSize: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" || form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "14px" : "inherit",
+                    color: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" ? "#333333" : 
+                           form.leaveType === "restricted-flexi-holiday" || form.leaveType === "comp-off" ? "#202224" : "inherit"
+                  }}
                   value={form.leaveType}
                   onChange={(e) => {
                     const v = e.target.value;
@@ -425,6 +466,11 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                 <label>Sub Categories</label>
                 <div className="acl-select">
                   <select
+                    style={{
+                      color: form.leaveType === "out-of-office" ? "#101928" : "inherit",
+                      fontFamily: form.leaveType === "out-of-office" ? "Samsung InterFace" : "inherit",
+                      fontSize: form.leaveType === "out-of-office" ? "14px" : "inherit"
+                    }}
                     value={form.subCategory}
                     onChange={(e) => update("subCategory", e.target.value)}
                   >
@@ -436,7 +482,9 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
 
           <div className="acl-row-two">
             {!isRestricted && form.leaveType !== "long-service-leave" && form.leaveType !== "comp-off" && (
-              <div className="acl-field">
+              <div className="acl-field" style={{
+                width: form.leaveType === "out-of-office" ? "467px" : "auto"
+              }}>
                 <label>From Date</label>
                 <div className="acl-input-icon">
                   <input
@@ -445,7 +493,12 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                     value={form.fromDate}
                     onChange={(e) => update("fromDate", e.target.value)}
                   />
-                  <div className="acl-date-display">
+                  <div className="acl-date-display" style={{
+                    fontFamily: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" ? "Samsung InterFace" : "inherit",
+                    fontSize: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" ? "14px" : "inherit",
+                    color: form.leaveType === "out-of-office" ? "#4f378a" : 
+                           form.leaveType === "compassionate-bereavement" ? "#101928" : "inherit"
+                  }}>
                     {formatDate(form.fromDate)}
                   </div>
                   <button
@@ -457,63 +510,85 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                     <img src={datePickerIcon} alt="" />
                   </button>
                 </div>
-              </div>
-            )}
-
-            {form.leaveType !== "long-service-leave" && form.leaveType !== "comp-off" && (
-              <div className="acl-field">
-                <label>To Date</label>
-                <div className="acl-input-icon">
-                  <input
-                    ref={toRef}
-                    type="date"
-                    value={form.toDate}
-                    onChange={(e) => update("toDate", e.target.value)}
-                  />
-                  <div className="acl-date-display">
-                    {formatDate(form.toDate)}
+                
+                {/* Place acknowledgment below From Date for root route */}
+                {form.leaveType === "out-of-office" && (
+                  <div style={{ marginTop: "12px" }}>
+                    <AcknowledgmentFrame
+                      isChecked={form.ack}
+                      onChange={(checked) => update("ack", checked)}
+                    />
                   </div>
-                  <button
-                    type="button"
-                    className="acl-cal-btn"
-                    aria-label="Open to date picker"
-                    onClick={() => openPicker(toRef)}
-                  >
-                    <img src={datePickerIcon} alt="" />
-                  </button>
-                </div>
+                )}
               </div>
             )}
 
-            {isRestricted && (
-              <div className="acl-field">
-                <label>Flexy Holiday List</label>
-                <div className="acl-select">
-                  <select
-                    value={form.flexiHoliday || ""}
-                    onChange={(e) => update("flexiHoliday", e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Select flexy holiday
-                    </option>
-                    <option value="new-year">New Year</option>
-                    <option value="regional-festival">Regional Festival</option>
-                    <option value="religious-observance">
-                      Religious Observance
-                    </option>
-                    <option value="other">Other</option>
-                  </select>
+            {form.leaveType !== "long-service-leave" && form.leaveType !== "comp-off" && !isRestricted && (
+              <div style={{ 
+                display: "flex", 
+                alignItems: "flex-start", 
+                marginTop: "2px",
+                marginLeft: form.leaveType === "out-of-office" ? "4px" : "0px" 
+              }}>
+                <div className="acl-field" style={{ 
+                  flex: form.leaveType === "out-of-office" ? "none" : "1", 
+                  width: form.leaveType === "out-of-office" ? "467px" : "auto" 
+                }}>
+                  <label>To Date</label>
+                  <div className="acl-input-icon">
+                    <input
+                      ref={toRef}
+                      type="date"
+                      value={form.toDate}
+                      onChange={(e) => update("toDate", e.target.value)}
+                    />
+                    <div className="acl-date-display" style={{
+                      fontFamily: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" ? "Samsung InterFace" : "inherit",
+                      fontSize: form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement" ? "14px" : "inherit",
+                      color: form.leaveType === "out-of-office" ? "#4f378a" : 
+                             form.leaveType === "compassionate-bereavement" ? "#101928" : "inherit"
+                    }}>
+                      {formatDate(form.toDate)}
+                    </div>
+                    <button
+                      type="button"
+                      className="acl-cal-btn"
+                      aria-label="Open to date picker"
+                      onClick={() => openPicker(toRef)}
+                    >
+                      <img src={datePickerIcon} alt="" />
+                    </button>
+                  </div>
                 </div>
+                {(form.leaveType === "out-of-office" || form.leaveType === "compassionate-bereavement") && (
+                  <button 
+                    type="button" 
+                    className="acl-btn icon-only-btn"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "8px",
+                      backgroundColor: "#EFF8FF",
+                      border: "1px solid #D0D5DD",
+                      borderRadius: "6px",
+                      cursor: "pointer",
+                      height: "40px",
+                      width: "40px",
+                      marginLeft: "100px",
+                      marginTop: form.leaveType === "compassionate-bereavement" || form.leaveType === "out-of-office" ? "35px" : "25px" /* Adjust vertical position */
+                    }}
+                    onClick={() => {}}
+                    aria-label="Add to Leave list"
+                  >
+                    <img src={addLLIcon} alt="Add to Leave list" />
+                  </button>
+                )}
               </div>
             )}
           </div>
-
-          {form.leaveType === "out-of-office" && (
-            <AcknowledgmentSection
-              isChecked={form.ack}
-              onChange={(checked) => update("ack", checked)}
-            />
-          )}
+          
+          {/* Removed acknowledgment from here */}
 
           <div className="acl-field acl-col-span">
             <label>Reason for Leave</label>
@@ -523,7 +598,7 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
               onChange={(e) => update("reason", e.target.value)}
               style={{
                 textAlign: "left",
-                fontSize: "14px",
+                fontSize: "16px", // Updated to 16px as requested
                 lineHeight: "145%",
                 padding: "35px 16px",
                 resize: "none",
@@ -534,12 +609,10 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                 width: "100%",
                 boxSizing: "border-box",
                 fontFamily: "Samsung InterFace",
+                color: "#000000", // Added color as requested
                 verticalAlign: "middle",
-                overflow: "hidden",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
+                overflow: "hidden"
               }}
-              className="hide-scrollbar"
               placeholder={
                 form.leaveType === "comp-off"
                   ? "I have an important personal matter to attend at my Home town."
@@ -556,7 +629,7 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
               onChange={(e) => update("comment", e.target.value)}
               style={{
                 textAlign: "left",
-                fontSize: "14px",
+                fontSize: "14px", // Kept at 14px as specified for Comment fields
                 lineHeight: "145%",
                 padding: "35px 16px",
                 resize: "none",
@@ -566,13 +639,11 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
                 height: "90px",
                 width: "100%",
                 boxSizing: "border-box",
-                fontFamily: "Samsung InterFace",
+                fontFamily: "Samsung InterFace", // Already set
+                color: "#000000", // Updated to #000000 as specified
                 verticalAlign: "middle",
-                overflow: "hidden",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
+                overflow: "hidden"
               }}
-              className="hide-scrollbar"
               placeholder="I have an important personal matter to attend at my Home town."
             />
           </div>
@@ -580,10 +651,28 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
 
         <div className="acl-footer">
           <div className="acl-actions">
-            <button type="button" className="acl-btn ghost" onClick={onCancel}>
+            <button 
+              type="button" 
+              className="acl-btn ghost" 
+              onClick={onCancel}
+              style={{
+                fontFamily: "Samsung InterFace",
+                fontSize: "14px",
+                color: "#202224"
+              }}
+            >
               Cancel
             </button>
-            <button type="submit" className="acl-btn primary">
+            <button 
+              type="submit" 
+              className="acl-btn primary"
+              style={{
+                fontFamily: "Samsung InterFace",
+                fontWeight: "bold",
+                fontSize: "14px",
+                color: "#f5f5f5"
+              }}
+            >
               Submit
             </button>
           </div>

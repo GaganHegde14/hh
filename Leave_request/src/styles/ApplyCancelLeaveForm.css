@@ -308,7 +308,7 @@
   right: -6px;
   z-index: 100;
   margin-top: 5px;
-  width: 680px;
+  width: 450px; /* Decreased from 680px to make popup narrower */
 }
 .acl-note-beak {
   position: absolute;
@@ -440,6 +440,13 @@ textarea:-ms-input-placeholder {
   display: flex;
   align-items: center;
   margin-top: 12px; /* Add some spacing from the input fields */
+}
+
+.acl-add-list-below {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  grid-column: 3/4;
 }
 
 .acl-add-list-img {
