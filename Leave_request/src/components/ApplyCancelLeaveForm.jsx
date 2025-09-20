@@ -208,8 +208,9 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
             )}
           </div>
 
-          {/* Special layout for long-service leave: Leave Type, From Date, To Date in one row */}
-          {form.leaveType === "long-service-leave" ? (
+          {/* Special layout for long-service leave AND comp-off: Leave Type, From Date, To Date in one row */}
+          {form.leaveType === "long-service-leave" ||
+          form.leaveType === "comp-off" ? (
             <div className="acl-row-three">
               <div className="acl-field">
                 <label>Leave Type</label>
@@ -286,20 +287,54 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
 
               <div className="acl-field">
                 <label>To Date</label>
-                <div className="acl-input-icon acl-readonly">
+                <div
+                  className={
+                    form.leaveType === "long-service-leave"
+                      ? "acl-input-icon acl-readonly"
+                      : "acl-input-icon"
+                  }
+                >
                   <input
                     ref={toRef}
                     type="date"
-                    value="2025-09-19"
-                    readOnly
-                    className="acl-readonly-input"
+                    value={
+                      form.leaveType === "comp-off" ? form.toDate : "2025-09-19"
+                    }
+                    onChange={(e) => {
+                      if (form.leaveType === "comp-off") {
+                        update("toDate", e.target.value);
+                      }
+                    }}
+                    readOnly={form.leaveType === "long-service-leave"}
+                    className={
+                      form.leaveType === "long-service-leave"
+                        ? "acl-readonly-input"
+                        : ""
+                    }
                   />
-                  <div className="acl-date-display">19-Sep-2025</div>
+                  <div className="acl-date-display">
+                    {form.leaveType === "comp-off"
+                      ? formatDate(form.toDate)
+                      : "19-Sep-2025"}
+                  </div>
                   <button
                     type="button"
-                    className="acl-cal-btn acl-cal-btn-disabled"
-                    aria-label="Date picker disabled"
-                    disabled
+                    className={
+                      form.leaveType === "long-service-leave"
+                        ? "acl-cal-btn acl-cal-btn-disabled"
+                        : "acl-cal-btn"
+                    }
+                    aria-label={
+                      form.leaveType === "long-service-leave"
+                        ? "Date picker disabled"
+                        : "Open to date picker"
+                    }
+                    disabled={form.leaveType === "long-service-leave"}
+                    onClick={() => {
+                      if (form.leaveType === "comp-off") {
+                        openPicker(toRef);
+                      }
+                    }}
                   >
                     <img src={datePickerIcon} alt="" />
                   </button>
@@ -382,22 +417,25 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
             </div>
           )}
 
-          {!hideSubCategories && !isCompassionate && !isRestricted && form.leaveType !== "comp-off" && (
-            <div className="acl-field">
-              <label>Sub Categories</label>
-              <div className="acl-select">
-                <select
-                  value={form.subCategory}
-                  onChange={(e) => update("subCategory", e.target.value)}
-                >
-                  <option value="team-bonding">Team Bonding Activity</option>
-                </select>
+          {!hideSubCategories &&
+            !isCompassionate &&
+            !isRestricted &&
+            form.leaveType !== "comp-off" && (
+              <div className="acl-field">
+                <label>Sub Categories</label>
+                <div className="acl-select">
+                  <select
+                    value={form.subCategory}
+                    onChange={(e) => update("subCategory", e.target.value)}
+                  >
+                    <option value="team-bonding">Team Bonding Activity</option>
+                  </select>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           <div className="acl-row-two">
-            {!isRestricted && form.leaveType !== "long-service-leave" && (
+            {!isRestricted && form.leaveType !== "long-service-leave" && form.leaveType !== "comp-off" && (
               <div className="acl-field">
                 <label>From Date</label>
                 <div className="acl-input-icon">
@@ -422,7 +460,7 @@ const ApplyCancelLeaveForm = ({ onSubmit, onCancel, initialLeaveType }) => {
               </div>
             )}
 
-            {form.leaveType !== "long-service-leave" && (
+            {form.leaveType !== "long-service-leave" && form.leaveType !== "comp-off" && (
               <div className="acl-field">
                 <label>To Date</label>
                 <div className="acl-input-icon">
